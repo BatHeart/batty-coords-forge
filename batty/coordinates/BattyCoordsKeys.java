@@ -13,6 +13,7 @@ import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 public class BattyCoordsKeys {
 
     public static boolean keyToggleCoords = false;
+	public static boolean keyMoveCoords = false;    
 
     public BattyCoordsKeys() {
 
@@ -20,11 +21,11 @@ public class BattyCoordsKeys {
 
     @SubscribeEvent
     public void trackKeyInputs(KeyInputEvent event) {
-		if (BattyBaseUI.hideunhideCoordskey.func_151468_f()) {
+		if (BattyBaseUI.hideunhideCoordskey.isPressed()) {
 			keyToggleCoords = true;
+		} else if (BattyBaseUI.moveCoordScreenPos.isPressed()) {
+			keyMoveCoords = true;			
         }
-
-
     }
 
 
