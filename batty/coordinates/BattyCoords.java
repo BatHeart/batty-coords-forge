@@ -14,9 +14,11 @@ import java.util.Properties;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.Direction;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
@@ -30,7 +32,9 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
  */
 public class BattyCoords extends Gui {
     
-    private final Minecraft mc;
+	private static Minecraft mc;
+	private static GuiIngame gui = new GuiIngame(mc);
+	
     int showCoords = 1;
     boolean shadedCoords = true;
     int myTitleText = 0xFF8800; // default textcolour = oldgold
@@ -47,6 +51,14 @@ public class BattyCoords extends Gui {
     int myMoveX;
     int myMoveZ;
     int myFind;
+    
+	protected static final ResourceLocation batUIResourceLocation = new ResourceLocation("battyUI:textures/batheart_icon.png");
+	
+	static float batLogoScaler = 0.036F;
+	static int batLogoU = 0;
+	static int batLogoV = 0;
+	static int batLogoX = (int) (256.0F * batLogoScaler);
+	static int batLogoY = (int) (256.0D * batLogoScaler);    
     
     int coordLocation;    
 	int myXLine, myYLine, myZLine, myBiomeLine;
@@ -93,6 +105,45 @@ public class BattyCoords extends Gui {
 		this.retrieveRuntimeOptions();
 
     }
+    
+	/**
+	 * Draws a rectangle of the texture provided at the location specified, sized and scaled as specified
+	 */
+	public static void drawTexture(int x, int y, int u, int v, int width,
+			int height, ResourceLocation resourceLocation, float scaler)
+
+	{
+		x = (int) (x / scaler);
+		y = (int) (y / scaler);
+
+		GL11.glPushMatrix();
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glScalef(scaler, scaler, scaler);
+
+		mc.renderEngine.bindTexture(resourceLocation);
+		gui.drawTexturedModalRect(x, y, u, v, width, height);
+
+		GL11.glPopMatrix();
+	}
+/**
+ * Calls drawTexture() to present the BatHeart Logo at the screen position specified
+ * @param x - location across screen from left to right
+ * @param y - location down screen from top to bottom
+ */
+	protected static void drawLogoTexture(int x, int y) {
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glColor4f(255.0F, 255.0F, 255.0F, 255.0F);
+
+		drawTexture(x, y, batLogoU, batLogoV, (int) (batLogoX / batLogoScaler),
+				(int) (batLogoY / batLogoScaler), batUIResourceLocation,
+				batLogoScaler);
+
+		GL11.glDisable(GL11.GL_BLEND);
+	}
+	    
+    
+    
     /**
      * Searches for 'name' within the array 'names'
      * @param names Array of String to be searched
@@ -349,6 +400,8 @@ public class BattyCoords extends Gui {
         } else {
             var8.drawStringWithShadow(String.format("%d", new Object[]{Integer.valueOf(myPosZ)}), myCoord1Offset, myZLine, myNegCoordText);
         }           
+        
+		drawLogoTexture((myRHSlocation - 12), (myYLine-1));        
         
         var8.drawStringWithShadow(myCardinalPoint[myAngle], myRHSlocation, myYLine, myCompassText);
 
