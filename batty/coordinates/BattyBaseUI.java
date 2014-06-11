@@ -20,7 +20,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = "Batty's Coordinates", name = "Batty's Coordinates", version = "1.7.2_1.3.0")
+@Mod(modid = "Batty's Coordinates", name = "Batty's Coordinates", version = "1.7.2_1.4.2")
 /**
  * Forge Base class for BattyCoords
  * @author BatHeart
@@ -40,11 +40,13 @@ public class BattyBaseUI {
 
     public static KeyBinding hideunhideCoordskey = new KeyBinding("Hide / Unhide Coords", Keyboard.KEY_NUMPAD4,"Batty's Coordinates");
     public static KeyBinding moveCoordScreenPos = new KeyBinding("Change Coords Screen Position", Keyboard.KEY_NUMPAD1,"Batty's Coordinates");
+    public static KeyBinding copyCoordsClipboard = new KeyBinding("Copy Coords to Clipboard", Keyboard.KEY_NUMPAD7,"Batty's Coordinates");
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		ClientRegistry.registerKeyBinding(hideunhideCoordskey);
-        ClientRegistry.registerKeyBinding(moveCoordScreenPos);		
+        ClientRegistry.registerKeyBinding(moveCoordScreenPos);	
+        ClientRegistry.registerKeyBinding(copyCoordsClipboard);	
 	}
 
 	@EventHandler

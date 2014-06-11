@@ -14,6 +14,7 @@ public class BattyCoordsKeys {
 
     public static boolean keyToggleCoords = false;
 	public static boolean keyMoveCoords = false;    
+	public static boolean keyCopyCoords = false; 
 
     public BattyCoordsKeys() {
 
@@ -25,6 +26,8 @@ public class BattyCoordsKeys {
 			keyToggleCoords = true;
 		} else if (BattyBaseUI.moveCoordScreenPos.isPressed()) {
 			keyMoveCoords = true;			
+        } else if (BattyBaseUI.copyCoordsClipboard.isPressed()) {
+			keyCopyCoords = true;			
         }
     }
 

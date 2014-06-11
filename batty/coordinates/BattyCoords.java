@@ -4,6 +4,8 @@
  */
 package batty.coordinates;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -28,7 +30,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 /**
  *
  * @author BatHeart
- * @version 1.7.2 (1.3.0)
+ * @version 1.7.2 (1.4.2)
  */
 public class BattyCoords extends Gui {
     
@@ -385,9 +387,9 @@ public class BattyCoords extends Gui {
             drawRect((int) coordBoxL, coordBoxTop, coordBoxR, coordBoxBase, myRectColour);
         }
 
-        var8.drawStringWithShadow(String.format("X: "), myBaseOffset, myXLine, myTitleText);
-        var8.drawStringWithShadow(String.format("Y: "), myBaseOffset, myYLine, myTitleText);
-        var8.drawStringWithShadow(String.format("Z: "), myBaseOffset, myZLine, myTitleText);
+        var8.drawStringWithShadow(String.format("x: "), myBaseOffset, myXLine, myTitleText);
+        var8.drawStringWithShadow(String.format("y: "), myBaseOffset, myYLine, myTitleText);
+        var8.drawStringWithShadow(String.format("z: "), myBaseOffset, myZLine, myTitleText);
         
         if (myPosX >= 0) {
             var8.drawStringWithShadow(String.format("%d", new Object[]{Integer.valueOf(myPosX)}), myCoord1Offset, myXLine, myPosCoordText);
@@ -431,13 +433,26 @@ public class BattyCoords extends Gui {
 		this.storeRuntimeOptions();
 		BattyCoordsKeys.keyMoveCoords = false;
 	}
-    
+    /**
+     * Copies the current coordinates as a string into the System Clipboard, for the player to
+     * paste wherever they wish
+     */
+	public void copyScreenCoords() {
+		
+	    StringSelection myCoordString = new StringSelection("x:" + myPosX + " y:" + myPosY + " z:" + myPosZ);
+	    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(myCoordString, null);
+		
+		BattyCoordsKeys.keyCopyCoords = false;
+	}
+	
+		
+	
     /**
      * Publicly exposed method, handles Coordinate rendering when they are intended to appear
      */
     @SubscribeEvent
     public void renderPlayerInfo(RenderGameOverlayEvent event) {
-        if (event.isCancelable() || event.type != ElementType.EXPERIENCE) {
+        if (event.isCancelable() || event.type != ElementType.HOTBAR) {
             return;
         }
 
@@ -447,6 +462,10 @@ public class BattyCoords extends Gui {
 
 		if (BattyCoordsKeys.keyMoveCoords) {
 			this.rotateScreenCoords();
+		}
+		
+		if (BattyCoordsKeys.keyCopyCoords) {
+			this.copyScreenCoords();
 		}
 		
         if (!this.mc.gameSettings.showDebugInfo) {
